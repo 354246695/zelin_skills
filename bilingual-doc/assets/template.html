@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title><!-- TODO: 文档标题 --></title>
+<style>
+  /* 版式源自 skill-optimize-提示词中英对照 / aae-评测用例生成skill-中英对照，配色变量可改 */
+  :root {
+    --ink: #232a31;
+    --muted: #5c6670;
+    --paper: #fbfaf7;
+    --line: #e2ded6;
+    --acc-a: #0b5cad;      /* 主线强调色（蓝） */
+    --acc-a-bg: #eef4fb;
+    --acc-b: #0a7d6c;      /* 第二条并行线强调色（绿），单线文档用不到 */
+    --acc-b-bg: #ecf6f3;
+    --note-ink: #7a5d0e;
+    --note-bg: #fbf3dc;
+    --code-bg: #f5f4ef;
+    --tag-bg: #eceae4;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+    color: var(--ink);
+    background: var(--paper);
+    line-height: 1.7;
+    font-size: 15.5px;
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px 80px; }
+
+  /* ── 页头 ── */
+  header.masthead { padding: 44px 0 22px; border-bottom: 3px solid var(--ink); }
+  header.masthead h1 { margin: 0 0 6px; font-size: 30px; letter-spacing: .5px; }
+  header.masthead .sub { color: var(--muted); font-size: 16px; margin: 0 0 14px; }
+  header.masthead .meta { font-size: 13px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 6px 22px; }
+  header.masthead .meta b { color: var(--ink); font-weight: 600; }
+
+  /* ── 顶部导航（窄屏） ── */
+  nav.toc {
+    position: sticky; top: 0; z-index: 20;
+    background: rgba(251,250,247,.96); backdrop-filter: blur(4px);
+    border-bottom: 1px solid var(--line);
+    padding: 9px 0; margin-bottom: 8px;
+  }
+  nav.toc .links { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 13.5px; }
+  nav.toc a { color: var(--muted); text-decoration: none; padding: 2px 6px; border-radius: 4px; }
+  nav.toc a:hover { color: #fff; background: var(--ink); }
+  nav.toc a.t-a:hover { background: var(--acc-a); }
+  nav.toc a.t-b:hover { background: var(--acc-b); }
+  nav.toc a.active { color: #fff; background: var(--ink); }
+  nav.toc a.active.t-a { background: var(--acc-a); }
+  nav.toc a.active.t-b { background: var(--acc-b); }
+
+  /* ── 悬浮侧边导航（宽屏） ── */
+  section, h3[id] { scroll-margin-top: 70px; }
+  .sidenav { display: none; }
+  .sidenav {
+    position: fixed; left: 16px; top: 50%; transform: translateY(-50%);
+    z-index: 30; width: 210px; max-height: calc(100vh - 32px); overflow-y: auto;
+    background: rgba(255,255,255,.94); backdrop-filter: blur(6px);
+    border: 1px solid var(--line); border-radius: 12px;
+    padding: 10px 8px; font-size: 13px; line-height: 1.5;
+    scrollbar-width: thin;
+  }
+  .sidenav .sn-title {
+    font-size: 11.5px; font-weight: 700; letter-spacing: 3px; color: var(--muted);
+    padding: 2px 10px 8px;
+  }
+  .sidenav a {
+    display: block; color: var(--muted); text-decoration: none;
+    padding: 5px 10px; border-radius: 6px; border-left: 3px solid transparent;
+  }
+  .sidenav a.sub { padding-left: 24px; font-size: 12.5px; }
+  .sidenav a:hover { color: var(--ink); background: var(--tag-bg); }
+  .sidenav a.active { color: var(--ink); background: var(--tag-bg); border-left-color: var(--ink); font-weight: 600; }
+  .sidenav a.active.t-a { color: var(--acc-a); background: var(--acc-a-bg); border-left-color: var(--acc-a); }
+  .sidenav a.active.t-b { color: var(--acc-b); background: var(--acc-b-bg); border-left-color: var(--acc-b); }
+
+  @media (min-width: 1280px) {
+    .sidenav { display: block; }
+    nav.toc { display: none; }
+    body { padding-left: 258px; }
+  }
+
+  /* ── 章节 ── */
+  section { margin-top: 58px; }
+  h2 {
+    font-size: 23px; margin: 0 0 4px; padding-bottom: 8px;
+    border-bottom: 2px solid var(--line);
+  }
+  .sec-a h2 { border-color: var(--acc-a); }
+  .sec-b h2 { border-color: var(--acc-b); }
+  h3 { font-size: 19px; margin: 34px 0 4px; }
+  .sec-a h3 { color: var(--acc-a); }
+  .sec-b h3 { color: var(--acc-b); }
+  h4 { font-size: 16px; margin: 24px 0 4px; }
+  .lead { color: var(--muted); margin: 6px 0 18px; }
+  .src {
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 12px; color: var(--muted);
+    margin: 2px 0 14px;
+  }
+  .src::before { content: "出处 "; color: #9aa2ab; }
+  p { margin: 10px 0; }
+
+  /* ── 中英对照块 ── */
+  .bilingual {
+    border: 1px solid var(--line); border-radius: 10px; overflow: hidden;
+    background: #fff; margin: 12px 0 6px;
+  }
+  .pair { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); }
+  .pair + .pair { border-top: 1px dashed var(--line); }
+  .pair > div { padding: 12px 18px; min-width: 0; }
+  .pair > .en { background: var(--code-bg); }
+  .pair > .cn { background: #fff; border-left: 1px solid var(--line); }
+  .pair.head > div {
+    background: var(--tag-bg); font-size: 12px; font-weight: 700;
+    letter-spacing: 1.5px; color: var(--muted); padding: 6px 18px;
+  }
+  .pair.head > .cn { border-left: 1px solid var(--line); }
+  .pair p { margin: 6px 0; }
+  .pair ol, .pair ul { margin: 6px 0; padding-left: 24px; }
+  .pair li { margin: 4px 0; }
+  .pair li > p { margin: 5px 0; }
+  .pair li > p:first-child { margin-top: 0; }
+  .pair li > p:last-child { margin-bottom: 0; }
+  .pair ul ul, .pair ol ul { margin: 5px 0 2px; padding-left: 20px; }
+  .pair ul ul li, .pair ol ul li { margin: 3px 0; font-size: 14px; }
+  .pair .h-in {
+    display: block; font-weight: 700; font-size: 15px; margin: 8px 0 2px;
+  }
+  .en em, .en b { font-style: normal; font-weight: 700; }
+  code {
+    font-family: Consolas, "Courier New", monospace; font-size: 13.5px;
+    background: #eceae3; border-radius: 4px; padding: 1px 5px;
+  }
+  .en code { background: #e6e4dd; }
+
+  /* ── 代码块（两侧一致，不译） ── */
+  .cap {
+    font-size: 12px; color: var(--muted); margin: 10px 18px 0;
+    font-family: Consolas, "Courier New", monospace;
+  }
+  .bilingual pre { margin: 4px 18px 14px; }
+  pre.tmpl, pre.json {
+    font-family: Consolas, "Courier New", monospace; font-size: 13px;
+    background: var(--code-bg); border: 1px solid var(--line); border-radius: 8px;
+    padding: 12px 16px; overflow-x: auto; white-space: pre-wrap; word-break: break-word;
+    margin: 8px 0; line-height: 1.6;
+  }
+  pre.json { background: #f2f1ec; }
+
+  /* ── 注释框：只放产出者自己的观察/查证，不放原文 ── */
+  .note {
+    background: var(--note-bg); border-left: 4px solid #d9b44a;
+    border-radius: 0 8px 8px 0; padding: 10px 16px; margin: 12px 0 20px;
+    font-size: 14px;
+  }
+  .note b.tag-n {
+    display: inline-block; background: #d9b44a; color: #fff; font-size: 11.5px;
+    border-radius: 4px; padding: 0 7px; margin-right: 8px; vertical-align: 1px;
+  }
+  .note ul { margin: 6px 0 2px; padding-left: 20px; }
+  .note li { margin: 3px 0; }
+
+  /* ── 表格 ── */
+  table.tbl {
+    width: 100%; border-collapse: collapse; background: #fff;
+    font-size: 14px; margin: 12px 0 20px;
+  }
+  .tbl th, .tbl td { border: 1px solid var(--line); padding: 7px 12px; text-align: left; vertical-align: top; }
+  .tbl th { background: var(--tag-bg); font-size: 13px; letter-spacing: .5px; }
+  .tbl td code { font-size: 12.5px; }
+
+  /* ── 流程条（导读章的主流程概览可用） ── */
+  .flow {
+    display: flex; flex-wrap: wrap; align-items: stretch; gap: 8px;
+    margin: 16px 0 8px;
+  }
+  .flow .step {
+    border: 1.5px solid var(--line); border-radius: 9px; background: #fff;
+    padding: 8px 13px; font-size: 13.5px; display: flex; flex-direction: column;
+    justify-content: center; min-width: 130px;
+  }
+  .flow .step small { color: var(--muted); font-size: 12px; }
+  .flow .arrow {
+    align-self: center; color: var(--muted); font-size: 18px; font-weight: 700;
+    white-space: nowrap;
+  }
+  .flow-cap { font-size: 13px; color: var(--muted); margin: 4px 0 18px; }
+
+  ul.plain { margin: 8px 0 16px; padding-left: 22px; }
+  ul.plain li { margin: 5px 0; }
+
+  .appendix { margin-top: 60px; padding-top: 10px; border-top: 3px solid var(--ink); }
+  footer.end {
+    margin-top: 60px; padding-top: 16px; border-top: 1px solid var(--line);
+    color: var(--muted); font-size: 13px;
+  }
+
+  @media (max-width: 920px) {
+    .pair { grid-template-columns: 1fr; }
+    .pair > .cn { border-left: none; border-top: 1px dashed var(--line); }
+    .pair.head > .cn { border-top: none; }
+    .pair.head { grid-template-columns: 1fr; }
+    .pair.head > .cn { display: none; }
+  }
+  @media print {
+    nav.toc, .sidenav { display: none !important; }
+    body { font-size: 12px; padding-left: 0 !important; }
+    .pair { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ═══════════ 页头：来源、基线、核对日期、用途，四项必填 ═══════════ -->
+<header class="masthead">
+  <h1><!-- TODO: 标题 --></h1>
+  <p class="sub"><!-- TODO: 一句话说明：收录对象、是否全文无删节、行号对齐什么基线 --></p>
+  <div class="meta">
+    <span><b>来源</b> <!-- TODO: 仓库/目录路径 --></span>
+    <span><b>基线</b> <!-- TODO: commit 短哈希+日期+是否干净；或「无版本基线」 --></span>
+    <span><b>行号核对</b> <!-- TODO: YYYY-MM-DD --></span>
+    <span><b>用途</b> <!-- TODO: 供谁做什么用 --></span>
+  </div>
+</header>
+
+<!-- ═══════════ 悬浮侧边导航：每章一条，每节一条 sub；主线 t-a，第二线 t-b ═══════════ -->
+<nav class="sidenav" aria-label="章节导航">
+  <div class="sn-title">目 录</div>
+  <a href="#s0">0　<!-- TODO: 章名 --></a>
+  <a href="#s0-1" class="sub t-a">0.1　<!-- TODO: 节名 --></a>
+  <a href="#s1" class="t-a">1　<!-- TODO: 章名 --></a>
+  <a href="#s1-1" class="sub t-a">1.1　<!-- TODO: 节名 --></a>
+</nav>
+
+<!-- ═══════════ 顶部导航（窄屏）：挑 6–10 个高频锚点即可 ═══════════ -->
+<nav class="toc">
+  <div class="links">
+    <a href="#s0" class="t-a">导读</a>
+    <a href="#s1" class="t-a">第一章</a>
+  </div>
+</nav>
+
+<!-- ═══════════ 每章一个 section；单条主线全用 sec-a，第二条并行线用 sec-b ═══════════ -->
+<section id="s0">
+  <h2>0　<!-- TODO: 章标题 --></h2>
+  <p class="lead"><!-- TODO: 导语 --></p>
+  <ul class="plain">
+    <li><!-- TODO: 要点 --></li>
+  </ul>
+</section>
+
+<section id="s1" class="sec-a">
+  <h2>1　<!-- TODO: 章标题 --></h2>
+  <p class="lead"><!-- TODO: 导语：对应源文件与行数 --></p>
+
+  <!-- 每个原文小节一块：h3 + 出处行 + bilingual 卡片 -->
+  <h3 id="s1-1">1.1　<!-- TODO: 节标题（L起–L止） --></h3>
+  <p class="src"><!-- TODO: 源文件路径　第 X–Y 行 --></p>
+  <div class="bilingual">
+    <div class="pair head"><div class="en">原文（EN）</div><div class="cn">中文对照</div></div>
+    <div class="pair">
+      <div class="en"><p><!-- TODO: 原文段落，只加排版不改措辞 --></p></div>
+      <div class="cn"><p><!-- TODO: 对应译文，代码标识保留英文 --></p></div>
+    </div>
+    <div class="cap"><!-- TODO: 代码块（第 X–Y 行）· 两侧一致 --></div>
+    <pre class="json"><!-- TODO: 代码原文照录，&lt; &gt; &amp; 必须转义 --></pre>
+  </div>
+
+  <!-- 只放产出者自己的观察/查证，框内标明「我的观察/判断」 -->
+  <div class="note">
+    <b class="tag-n">观察</b><!-- TODO: 我的判断，非仓库文档结论 -->
+  </div>
+
+  <!-- 对照清单类内容用全宽表格：列分「原文说明 / 中文说明」 -->
+  <table class="tbl">
+    <tr><th><!-- TODO: 表头 --></th><th>原文说明</th><th>中文说明</th></tr>
+    <tr><td><!-- TODO: 条目 --></td><td><!-- TODO: 原文 --></td><td><!-- TODO: 译文 --></td></tr>
+  </table>
+</section>
+
+<!-- 第二条并行线（可选）：配色 sec-b，导航链接 t-b -->
+<!-- <section id="s2" class="sec-b"> ... </section> -->
+
+<footer class="end">
+  <p><!-- TODO: 来源与基线；收录范围（无删节声明）；译文与注释为产出方责任；行号核对日期 --></p>
+</footer>
+
+<script>
+(function () {
+  var links = document.querySelectorAll('nav a[href^="#"]');
+  var map = {};
+  links.forEach(function (a) {
+    var id = a.getAttribute('href').slice(1);
+    (map[id] = map[id] || []).push(a);
+  });
+  var targets = document.querySelectorAll('section[id], h3[id]');
+  if (!('IntersectionObserver' in window)) return;
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      links.forEach(function (a) { a.classList.remove('active'); });
+      (map[e.target.id] || []).forEach(function (a) { a.classList.add('active'); });
+    });
+  }, { rootMargin: '-10% 0px -75% 0px' });
+  targets.forEach(function (t) { io.observe(t); });
+})();
+</script>
+
+</div>
+</body>
+</html>
